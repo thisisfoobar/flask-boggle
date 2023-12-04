@@ -38,9 +38,9 @@ class Boggle():
         if word_exists and valid_word:
             result = "ok"
         elif word_exists and not valid_word:
-            result = word + "is not on board"
+            result = word + " is not on board"
         else:
-            result = word + "is not a word"
+            result = word + " is not a word"
 
         return result
 
