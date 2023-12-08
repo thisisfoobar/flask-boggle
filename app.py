@@ -1,5 +1,5 @@
 from boggle import Boggle
-from flask import session,Flask,request,render_template,redirect,flash
+from flask import session,Flask,request,render_template,redirect,jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -25,23 +25,33 @@ def reset_game():
 
     return redirect("boggle-game")
 
-@app.route("/boggle-game")
+@app.route("/boggle-game",methods=["POST","GET"])
 def boggle_game_board():
     """Display board for new game"""
 
     return render_template("boggle-game.html", board = session["board"], guesses = session["guesses"])
 
-@app.route("/submit-guess", methods=["POST"])
-def submit_guess():
-    """Process guesses made by user"""
-    guess = request.form["guess"]
+@app.route("/check-word")
+def check_word():
+    """check if word is valid and on board"""
+    
+    word = request.args["word"]
+    board = session["board"]
 
-    result = boggle_game.check_valid_word(session["board"],guess)
-    if result == "ok":
-        guesses = session["guesses"]
-        guesses.append(guess)
-        session["guesses"] = guesses
-    else:
-        flash(result)
+    response = boggle_game.check_valid_word(board,word)
 
-    return redirect("boggle-game")
+    return jsonify({'result': response})
+# @app.route("/submit-guess", methods=["POST"])
+# def submit_guess():
+#     """Process guesses made by user"""
+#     guess = request.form["guess"]
+
+#     result = boggle_game.check_valid_word(session["board"],guess)
+#     if result == "ok":
+#         guesses = session["guesses"]
+#         guesses.append(guess)
+#         session["guesses"] = guesses
+#     else:
+#         flash(result)
+
+#     return redirect("boggle-game")

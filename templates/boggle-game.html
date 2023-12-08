@@ -1,40 +1,39 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 {% block title %}Boggle Game{% endblock %} 
+
 {% block main %}
 <div class="container text-center mt-5">
   <h1>Boggle Game!</h1>
 </div>
-<div class="container text-center mt-5">
-  <table class="table table-bordered">
-    {% for row in board %}
-    <tr>
-      {% for letter in row %}
-      <td>{{letter}}</td>
+<section id="boggle">
+  <div class="container text-center mt-5">
+    <table class="table table-bordered board">
+      {% for row in board %}
+      <tr>
+        {% for letter in row %}
+        <td>{{letter}}</td>
+        {% endfor %}
+      </tr>
       {% endfor %}
-    </tr>
-    {% endfor %}
-  </table>
-</div>
-<div class="container text-center mt-5">
-  <form action="/submit-guess" method="POST">
-      <input type="text" placeholder="Input your guess" name="guess">
+    </table>
+  </div>
+  <div class="container text-center mt-5">
+    <form method="POST" class="submit-word">
+      <input type="text" class="word" placeholder="Input your guess" autofocus />
       <button>Submit</button>
-  </form>
-</div>
-<div class="container text-center mt-3">
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <p>{{message}}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-</div>
+    </form>
+  </div>
+  <p>Seconds left: <b class="timer"></b></p>
+  <p class="msg">
 
-<!-- Remove, used for testing -->
-<ul>
-  {% for guess in guesses %}
-  <li>{{guess}}</li>
-{% endfor %}
-</ul>
+  </p>
+  <p class="score">
+
+  </p>
+</section>
+
+{% endblock %}
+{% block scripts %} 
+<script src="/static/boggle.js"></script>
+<script>let game = new Boggle_Game("boggle",60)</script>
 {% endblock %}
