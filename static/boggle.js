@@ -25,10 +25,7 @@ class Boggle_Game {
 
   // Display status message for guess
   showMessage(msg, cls) {
-    $(".msg", this.board)
-      .text(msg)
-      .removeClass()
-      .addClass(`msg ${cls}`);
+    $(".msg", this.board).text(msg).removeClass().addClass(`msg ${cls}`);
   }
 
   async handleSubmit(evt) {
@@ -40,6 +37,7 @@ class Boggle_Game {
 
     if (this.words.has(word)) {
       this.showMessage(`${word} has already been found`, "err");
+      $word.val("").focus;
       return;
     }
 
@@ -78,11 +76,12 @@ class Boggle_Game {
   // Post final score of game a prevent more guessing
   async scoreGame() {
     $(".submit-word", this.board).hide();
-    // const resp = await axios.post("/post-score", { score: this.score });
-    // if (resp.data.brokeRecord) {
-    //   this.showMessage(`New record: ${this.score}`, "score");
-    // } else {
-    //   this.showMessage(`Final score: ${this.score}`, "score");
-    // }
+    $(".msg", this.board).text("")
+    const resp = await axios.post("/post-score", { score: this.score });
+    if (resp.data.brokeRecord) {
+      this.showMessage(`New record: ${this.score}`, "score");
+    } else {
+      this.showMessage(`Final score: ${this.score}`, "score");
+    }
   }
 }

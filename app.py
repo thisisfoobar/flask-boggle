@@ -1,5 +1,5 @@
 from boggle import Boggle
-from flask import session,Flask,request,render_template,redirect,jsonify
+from flask import session,Flask,request,render_template,redirect,jsonify,flash
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -12,7 +12,11 @@ boggle_game = Boggle()
 @app.route("/")
 def start_game():
     """Home page with start game button"""
-    return render_template("start-game.html")
+    session["highscore"] = 0
+    session["plays"] = 0
+    session["board"] = []
+    session["guesses"] = []
+    return render_template("start-game.html",highscore = session["highscore"])
 
 @app.route("/reset-game", methods=["POST"])
 def reset_game():
@@ -29,7 +33,7 @@ def reset_game():
 def boggle_game_board():
     """Display board for new game"""
 
-    return render_template("boggle-game.html", board = session["board"], guesses = session["guesses"])
+    return render_template("boggle-game.html", plays = session["plays"], highscore = session["highscore"], board = session["board"], guesses = session["guesses"])
 
 @app.route("/check-word")
 def check_word():
@@ -41,17 +45,15 @@ def check_word():
     response = boggle_game.check_valid_word(board,word)
 
     return jsonify({'result': response})
-# @app.route("/submit-guess", methods=["POST"])
-# def submit_guess():
-#     """Process guesses made by user"""
-#     guess = request.form["guess"]
 
-#     result = boggle_game.check_valid_word(session["board"],guess)
-#     if result == "ok":
-#         guesses = session["guesses"]
-#         guesses.append(guess)
-#         session["guesses"] = guesses
-#     else:
-#         flash(result)
+@app.route("/post-score",methods=["POST"])
+def post_score():
+    """post final score and update high score"""
+    score = request.json["score"]
+    highscore = session["highscore"]
+    plays = session["plays"]
 
-#     return redirect("boggle-game")
+    session["plays"] = plays + 1
+    session["highscore"] = max(score, highscore)
+
+    return jsonify(brokeRecord = score > highscore)

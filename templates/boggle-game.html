@@ -5,6 +5,24 @@
 <div class="container text-center mt-5">
   <h1>Boggle Game!</h1>
 </div>
+<div class="row text-center mt-4">
+  <div class="col">
+    <form action="/reset-game" method="POST">
+      <button>Restart Game</button>
+    </form>
+  </div>
+  <div class="col">
+    <h3>High Score: {{highscore}}</h3>
+  </div>
+  <div class="col">
+    <h3>Times Played: {{plays}}</h3>
+  </div>
+  <div class="col">
+    <form action="/">
+      <button>Home</button>
+    </form>
+  </div>
+</div>
 <section id="boggle">
   <div class="container text-center mt-5">
     <table class="table table-bordered board">
@@ -23,13 +41,13 @@
       <button>Submit</button>
     </form>
   </div>
-  <p>Seconds left: <b class="timer"></b></p>
-  <p class="msg">
+  <div class="container text-center mt-5">
+    <p>Seconds left: <b class="timer"></b></p>
+    <p class="msg">
 
-  </p>
-  <p class="score">
-
-  </p>
+    </p>
+    <p>Score: <b class="score"></b></p>
+  </div>
 </section>
 
 {% endblock %}
